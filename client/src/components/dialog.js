@@ -42,7 +42,8 @@ export const Dialog = ({todo, onSubmit, params, setShow, title}) => {
         }}>
             <form ref={formRef} style={{width: '100%', display: 'flex', alignItems: 'center', flexDirection: 'column', }}>
                 {params.map((input) => {
-                    return (<div key={input.name}>
+                    const { name, label, type, style, ...inputProps } = input;
+                    return (<div key={name}>
                         <label
                         htmlFor={input.name}
                         style={{
@@ -57,8 +58,8 @@ export const Dialog = ({todo, onSubmit, params, setShow, title}) => {
                             {input.label}
                         </label>
                         <input
-                            type={input.type}
-                            name={input.name}
+                            type={type}
+                            name={name}
                             style={{
                                 padding: '0.5rem 0.75rem',
                                 fontSize: '1rem',
@@ -70,6 +71,7 @@ export const Dialog = ({todo, onSubmit, params, setShow, title}) => {
                                 width: '100%',
                                 boxSizing: 'border-box',
                                 width: '70vw',
+                                ...style,
                             }}
                             onFocus={(e) => {
                                 e.target.style.borderColor = '#007BFF';
@@ -81,6 +83,7 @@ export const Dialog = ({todo, onSubmit, params, setShow, title}) => {
                                 e.target.style.boxShadow = 'none';
                             }}
                             defaultValue={todo?.[input.name] || ""}
+                            {...inputProps}
                         />
                         <br />
                     </div>);

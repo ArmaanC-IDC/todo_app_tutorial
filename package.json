@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "client": "npm start --prefix client",
-  "server": "nodemon src/index.js",
+    "server": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -17,5 +17,9 @@
     "express": "^5.1.0",
     "joi": "^17.13.3",
     "pg": "^8.14.1"
-  }
+  },
+  "devDependencies": {
+    "gh-pages": "^6.3.0"
+  },
+  "homepage": "https://ArmaanC-IDC.github.io/todo_app_tutorial"
 }

@@ -30,7 +30,7 @@ app.get('/api/todos', async (req, res) => {
 
 //add a new todo to the database from the client
 app.post('/api/todos', async (req, res) => {
-    const { title, due_date } = req.body;
+    const { title, due_date, priority } = req.body;
 
     if (!title) {
         return res.status(400).json({ error: 'Title is required' });
@@ -38,8 +38,8 @@ app.post('/api/todos', async (req, res) => {
 
     try{
         const result = await client.query(
-            'INSERT INTO todos (title, due_date) VALUES ($1, $2) RETURNING *',
-            [title, due_date]
+            'INSERT INTO todos (title, due_date, priority) VALUES ($1, $2, $3) RETURNING *',
+            [title, due_date === '' ? null : due_date, priority]
         );
         res.status(201).json(result.rows);
     }catch (err){
@@ -50,14 +50,18 @@ app.post('/api/todos', async (req, res) => {
 
 //update the data of a todo
 app.post('/api/todos/update', async (req, res) => {
-    const { id, title, due_date} = req.body;
+    const { id, title, due_date, priority} = req.body;
     console.log("updating todo", id, " title: ", title);
     if (!id) req.status(400).json({error: "ID is required"});
 
     try{
         const result = await client.query(
-            "UPDATE todos SET title = COALESCE($2, title), due_date = COALESCE($3, due_date) WHERE id = $1 RETURNING *;",
-            [id, title, due_date]
+            `UPDATE todos SET 
+                title = COALESCE($2, title), 
+                due_date = COALESCE($3, due_date), 
+                priority = COALESCE($4, priority) 
+            WHERE id = $1 RETURNING *;`,
+            [id, title, due_date === '' ? null : due_date, priority]
         );
         if (result.rowCount==0) {
             req.status(400).json({error: "todo with ID of " + String(id) + " was not found"}); 
